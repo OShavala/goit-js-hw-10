@@ -15,9 +15,9 @@ errorEl.style.display = 'none';
 let breeds = [];
 
 function takeBreeds(response) {
-  for (let breed in response) {
-    breeds.push({ name: response[breed].name, id: response[breed].id });
-  }
+  Object.entries(response).forEach(([key, value]) => {
+    breeds.push({ name: value.name, id: value.id });
+  });
 }
 
 async function addBreeds() {
@@ -25,17 +25,14 @@ async function addBreeds() {
     const response = await fetchBreeds(errorEl);
 
     takeBreeds(response);
-
     let listOfBreedsEl = breeds.map(i => {
-      let optionEl = document.createElement('option');
-      optionEl.value = i.id;
-      optionEl.textContent = i.name;
-
-      return optionEl;
+      return `<option value="${i.id}">${i.name}</option>`;
     });
-
-    selectEl.append(...listOfBreedsEl);
-  } catch (error) {
+    
+    selectEl.insertAdjacentHTML('beforeend', listOfBreedsEl.join(''));
+  } 
+  
+  catch (error) {
     Notiflix.Notify.failure(errorEl.textContent);
 
     throw error;
@@ -63,7 +60,15 @@ function showBreed(returnedPromise) {
 
   const { name, description, temperament, image } = elements;
 
-  let htmlEls = `<img src="${image}" alt="${name}" class="image"><h1 class="title">${name}</h1><p class="description">${description}</p><p class="temperament"><b class="title-temperament">Temperament: </b>${temperament}</p>`;
+  let htmlEls = `<div class="container">
+  <img src="${image}" alt="${name}" class="image">
+  <div>
+  <h1 class="title">${name}</h1>
+  <p class="description">${description}</p>
+  <p class="temperament">
+  <b class="title-temperament">Temperament: </b>${temperament}</p>
+  </div>
+  </div>`;
 
   divEl.innerHTML = htmlEls;
   loaderS.style.display = 'none';
@@ -97,6 +102,7 @@ async function onSelectChange(event) {
     loaderS.style.display = 'none';
     loaderEl.style.display = 'none';
     selectEl.style.display = 'block';
+    throw error;
   }
 }
 

@@ -1,5 +1,4 @@
 import Notiflix from 'notiflix';
-import { apiKey } from './credentials.js';
 
 export function fetchBreeds(errorEl) {
   let urlBreeds = 'https://api.thecatapi.com/v1/breeds';
@@ -10,11 +9,12 @@ export function fetchBreeds(errorEl) {
       }
       return response.json();
     })
-    .catch(error => Notiflix.Notify.failure(errorEl.textContent));
+   
 }
 
 function urlConstructor(breedId) {
   const urlApi = 'https://api.thecatapi.com/v1/images/search?';
+  const apiKey ='live_jaWfzmOm4MFvCNwaeuAw8DN12zXImxoE2SxyWdXy4UCORPRRMmKppbnfZrGxueYZ';
   const searchParams = new URLSearchParams({
     breed_ids: breedId,
     api_key: apiKey,
@@ -31,11 +31,5 @@ export function fetchCatByBreed(breedId, errorEl, loaderEl, loaderS, selectEl) {
       }
       return response.json();
     })
-    .catch(error => {
-      Notiflix.Notify.failure(errorEl.textContent);
-      loaderS.style.display = 'none';
-      loaderEl.style.display = 'none';
-      selectEl.style.display = 'block';
-      throw error;
-    });
+    
 }
